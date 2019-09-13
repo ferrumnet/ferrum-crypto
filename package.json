@@ -1,0 +1,34 @@
+{
+  "name": "ferrum-crypto",
+  "version": "0.0.1",
+  "description": "Common crypto tool used by Ferrum projects",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "test": "./node_modules/.bin/jest"
+  },
+  "author": "Naiem Yeganeh",
+  "license": "MIT",
+  "devDependencies": {
+    "@babel/core": "^7.5.5",
+    "@babel/preset-env": "^7.5.5",
+    "@babel/preset-typescript": "^7.3.3",
+    "@types/crypto-js": "^3.1.43",
+    "babel-jest": "^24.8.0",
+    "jest": "^24.8.0",
+    "ts-loader": "^6.0.4",
+    "tslint": "^5.0.0",
+    "tslint-config-airbnb-base": "^0.3.0",
+    "typescript": "^3.5.3",
+    "webpack-babel-jest": "^1.0.4"
+  },
+  "dependencies": {
+    "cross-fetch": "^3.0.4",
+    "crypto-js": "^3.1.9-1",
+    "ferrum-plumbing": "git+https://github.com/ferrumnet/ferrum-plumbing.git"
+  }
+}
