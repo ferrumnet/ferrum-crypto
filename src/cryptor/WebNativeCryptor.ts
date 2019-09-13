@@ -14,6 +14,14 @@ export function hexToUtf8(hexStr: HexString): string {
   return encUtf8.stringify(encHex.parse(hexStr));
 }
 
+export function arrayBufferToHex(ab: Uint8Array): string {
+  return encHex.stringify(lib.WordArray.create(ab));
+}
+
+export function hexToBase64(hex: HexString): string {
+  return enc.Base64.stringify(encHex.parse(hex));
+}
+
 function keyToHex(key: InternalReactNativeEncryptedKey): string {
   const json = JSON.stringify(key);
   return encHex.stringify(encUtf8.parse(json));

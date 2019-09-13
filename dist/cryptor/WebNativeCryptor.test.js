@@ -32,4 +32,17 @@ test('encrypt then decrypt', () => __awaiter(void 0, void 0, void 0, function* (
     const decryptedMsg = WebNativeCryptor_1.hexToUtf8(decrpted);
     expect(decryptedMsg).toBe(msg);
 }));
+test('array buffer to hex', () => {
+    // tslint:disable-next-line:no-magic-numbers
+    const ab = new Uint8Array([72, 69, 76, 76, 79, 33]);
+    const hex = WebNativeCryptor_1.arrayBufferToHex(ab);
+    const text = WebNativeCryptor_1.hexToUtf8(hex);
+    expect(text).toBe('HELLO!');
+});
+test('hex to b64', () => {
+    const msg = 'HI!';
+    const msgHex = WebNativeCryptor_1.utf8ToHex(msg);
+    const b64 = WebNativeCryptor_1.hexToBase64(msgHex);
+    expect(b64).toBe('SEkh');
+});
 //# sourceMappingURL=WebNativeCryptor.test.js.map

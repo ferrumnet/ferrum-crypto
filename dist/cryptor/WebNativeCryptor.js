@@ -26,6 +26,14 @@ function hexToUtf8(hexStr) {
     return enc_utf8_1.default.stringify(enc_hex_1.default.parse(hexStr));
 }
 exports.hexToUtf8 = hexToUtf8;
+function arrayBufferToHex(ab) {
+    return enc_hex_1.default.stringify(crypto_js_1.lib.WordArray.create(ab));
+}
+exports.arrayBufferToHex = arrayBufferToHex;
+function hexToBase64(hex) {
+    return crypto_js_1.enc.Base64.stringify(enc_hex_1.default.parse(hex));
+}
+exports.hexToBase64 = hexToBase64;
 function keyToHex(key) {
     const json = JSON.stringify(key);
     return enc_hex_1.default.stringify(enc_utf8_1.default.parse(json));
