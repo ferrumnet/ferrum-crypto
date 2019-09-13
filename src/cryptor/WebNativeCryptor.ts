@@ -4,9 +4,13 @@ import AES from 'crypto-js/aes';
 import encUtf8 from 'crypto-js/enc-utf8';
 import encHex from 'crypto-js/enc-hex';
 import SHA256 from 'crypto-js/sha256';
-import { WordArray, lib } from 'crypto-js';
+import { WordArray, lib, enc } from 'crypto-js';
 
-function hexToUtf8(hexStr: HexString): string {
+export function utf8ToHex(hexStr: HexString): string {
+  return encHex.stringify(encUtf8.parse(hexStr));
+}
+
+export function hexToUtf8(hexStr: HexString): string {
   return encUtf8.stringify(encHex.parse(hexStr));
 }
 
@@ -32,38 +36,38 @@ export class WebNativeCryptor implements CryptorService {
 
   private decryptKey(key: InternalReactNativeEncryptedKey) {
     const kek = this.keyProvider.getKey(key.keyId);
-    const kekWa = encHex.parse(kek);
     const msg = encHex.parse(key.key);
-    const decKey = AES.decrypt(msg, kekWa);
-    return decKey.toString(encHex);
+    const decKey = AES.decrypt(enc.Base64.stringify(msg), kek);
+    return decKey.toString();
   }
 
-  private newKey(): { encryptedKey: HexString, keyId: string } {
+  private newKey(): { encryptedKey: HexString, keyId: string, unEncrypedKey: string } {
     const keyId = this.keyProvider.newKeyId();
     const kek = this.keyProvider.getKey(keyId);
-    const kekWa = encHex.parse(kek);
     const randomKeyWa = lib.WordArray.random(Algo.SIZES.KEY_SIZE);
-    const encKey = AES.encrypt(randomKeyWa, kekWa);
-    return { encryptedKey: encKey.toString(encHex), keyId };
+    const encKey = AES.encrypt(randomKeyWa, kek);
+    const encKeyB64 = encKey.toString();
+    const encKeyHex = enc.Hex.stringify(enc.Base64.parse(encKeyB64));
+    return { encryptedKey: encKeyHex, keyId, unEncrypedKey: encHex.stringify(randomKeyWa) };
   }
 
-  async decryptToHex(enc: EncryptedData): Promise<HexString> {
-    const key = keyHexToObject(enc.key);
+  async decryptToHex(encData: EncryptedData): Promise<HexString> {
+    const key = keyHexToObject(encData.key);
     if (key.algo !== Algo.ENCRYPTION.AES) {
       throw new CryptorError(`Key algorithm "${key.algo}" unsupported`);
     }
-    const msg = encHex.parse(enc.data);
+    const msg = encHex.parse(encData.data);
     const unEnvelopedKey = this.decryptKey(key);
-    const encRes = AES.decrypt(msg, encHex.parse(unEnvelopedKey));
+    const encRes = AES.decrypt(enc.Base64.stringify(msg), unEnvelopedKey);
     return encRes.toString(encHex);
   }
 
   async encryptHex(data: HexString): Promise<EncryptedData> {
     const newKey = this.newKey();
-    const newKeyWa = encHex.parse(newKey.encryptedKey);
     const msg = encHex.parse(data);
-    const res = AES.encrypt(msg, newKeyWa);
-    const encMsg = res.toString(encHex);
+    const res = AES.encrypt(msg, newKey.unEncrypedKey);
+    const encMsgB64 = res.toString();
+    const encMsg = enc.Hex.stringify(enc.Base64.parse(encMsgB64));
     return {
       data: encMsg,
       key: keyToHex({

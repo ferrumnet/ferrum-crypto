@@ -4,6 +4,8 @@
         "tslint-config-airbnb-base"
     ],
     "jsRules": {},
-    "rules": {},
+    "rules": {
+        "no-console": false
+    },
     "rulesDirectory": []
 }
