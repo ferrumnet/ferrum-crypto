@@ -1,4 +1,4 @@
-import { EncryptedData, Injectable } from 'ferrum-plumbing';
+import { EncryptedData, HexString, Injectable } from 'ferrum-plumbing';
 import fetch, { Headers } from 'cross-fetch';
 
 /**
@@ -45,23 +45,25 @@ export class LambdaEncryptionService implements Injectable {
     /**
      * Encrypts a data. Needs a buffer and returns @EncryptedData
      */
-  async encrypt(data: ArrayBuffer): Promise<EncryptedData> {
+  async encrypt(data: HexString): Promise<EncryptedData> {
     // @ts-ignore
-    const res = await this.call('encrypt', JSON.stringify({ data: data.toString('base64') }));
+    const dataBuffer = Buffer.from(data, 'hex');
+    // @ts-ignore
+    const res = await this.call('encrypt', JSON.stringify({ data: dataBuffer.toString('base64') }));
     return JSON.parse(res) as EncryptedData;
   }
 
     /**\
      * Decrypts the data. Returns a buffer
      */
-  async decrypt(enc: EncryptedData): Promise<ArrayBuffer> {
+  async decrypt(enc: EncryptedData): Promise<HexString> {
         // const key = isBase64 ? enc.key : Buffer.from(enc.key, 'hex').toString('base64');
         // const data = isBase64 ? enc.key : Buffer.from(enc.data, 'hex').toString('base64');
     const res = await this.call(
       'decrypt',
       JSON.stringify({ ...enc }));
     // @ts-ignore
-    return Buffer.from(res, 'base64');
+    return Buffer.from(res, 'base64').toString('hex');
   }
 
   __name__(): string {

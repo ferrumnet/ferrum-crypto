@@ -1,10 +1,9 @@
 "use strict";
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
         function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
         function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        function step(result) { result.done ? resolve(result.value) : new P(function (resolve) { resolve(result.value); }).then(fulfilled, rejected); }
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
@@ -61,7 +60,9 @@ class LambdaEncryptionService {
     encrypt(data) {
         return __awaiter(this, void 0, void 0, function* () {
             // @ts-ignore
-            const res = yield this.call('encrypt', JSON.stringify({ data: data.toString('base64') }));
+            const dataBuffer = Buffer.from(data, 'hex');
+            // @ts-ignore
+            const res = yield this.call('encrypt', JSON.stringify({ data: dataBuffer.toString('base64') }));
             return JSON.parse(res);
         });
     }
@@ -74,7 +75,7 @@ class LambdaEncryptionService {
             // const data = isBase64 ? enc.key : Buffer.from(enc.data, 'hex').toString('base64');
             const res = yield this.call('decrypt', JSON.stringify(Object.assign({}, enc)));
             // @ts-ignore
-            return Buffer.from(res, 'base64');
+            return Buffer.from(res, 'base64').toString('hex');
         });
     }
     __name__() {
