@@ -1,12 +1,12 @@
 import { Algo, CryptorError, CryptorService, KeyEncryptionProvider } from './CryptorService';
-import { EncryptedData, HexString, InternalReactNativeEncryptedKey } from 'ferrum-plumbing';
+import {EncryptedData, HexString, Injectable, InternalReactNativeEncryptedKey} from 'ferrum-plumbing';
 import AES from 'crypto-js/aes';
 import encUtf8 from 'crypto-js/enc-utf8';
 import encHex from 'crypto-js/enc-hex';
 import SHA256 from 'crypto-js/sha256';
 import { WordArray, lib, enc } from 'crypto-js';
 
-export function utf8ToHex(hexStr: HexString): string {
+export function utf8ToHex(hexStr: HexString): HexString {
   return encHex.stringify(encUtf8.parse(hexStr));
 }
 
@@ -14,15 +14,37 @@ export function hexToUtf8(hexStr: HexString): string {
   return encUtf8.stringify(encHex.parse(hexStr));
 }
 
-export function arrayBufferToHex(ab: Uint8Array): string {
+export function arrayBufferToHex(ab: Uint8Array): HexString {
   return encHex.stringify(lib.WordArray.create(ab));
 }
 
+export function hexToArrayBuffer(hex: HexString): Uint8Array {
+  // @ts-ignore
+  hex = hex.toString(16);
+
+  hex = hex.replace(/^0x/i,'');
+
+  let bytes: any[] = [];
+  for (let c = 0; c < hex.length; c += 2)
+    bytes.push(parseInt(hex.substr(c, 2), 16));
+  // @ts-ignore
+  return new Uint8Array(bytes);
+}
+
+/**
+ * Convert a hex string to a byte array
+ *
+ * Note: Implementation from crypto-js
+ *
+ * @method hexToBytes
+ * @param {string} hex
+ * @return {Array} the byte array
+ */
 export function hexToBase64(hex: HexString): string {
   return enc.Base64.stringify(encHex.parse(hex));
 }
 
-function keyToHex(key: InternalReactNativeEncryptedKey): string {
+function keyToHex(key: InternalReactNativeEncryptedKey): HexString {
   const json = JSON.stringify(key);
   return encHex.stringify(encUtf8.parse(json));
 }
@@ -39,7 +61,7 @@ export async function sha256(hexData: string): Promise<HexString> {
   return hash.toString(encHex);
 }
 
-export class WebNativeCryptor implements CryptorService {
+export class WebNativeCryptor implements CryptorService, Injectable {
   constructor(private keyProvider: KeyEncryptionProvider) { }
 
   private decryptKey(key: InternalReactNativeEncryptedKey) {
@@ -89,4 +111,10 @@ export class WebNativeCryptor implements CryptorService {
   async sha256(hexData: string): Promise<HexString> {
     return sha256(hexData);
   }
+
+  async randomKey(): Promise<HexString> {
+    return this.keyProvider.newKeyId();
+  }
+
+  __name__(): string { return 'WebNativeCryptor'; }
 }

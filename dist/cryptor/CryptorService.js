@@ -5,11 +5,12 @@ class CryptorError extends Error {
 exports.CryptorError = CryptorError;
 class Algo {
 }
+exports.Algo = Algo;
 Algo.SIZES = {
     KEY_SIZE: 32,
+    NONCE_SIZE: 24,
 };
 Algo.ENCRYPTION = {
     AES: 'aes',
 };
-exports.Algo = Algo;
 //# sourceMappingURL=CryptorService.js.map

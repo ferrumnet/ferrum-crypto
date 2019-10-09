@@ -21,7 +21,5 @@ export class CloudCryptor implements CryptorService, Injectable {
     return sha256(hexData);
   }
 
-  __name__(): string {
-    return 'CloudCryptor';
-  }
+  __name__(): string { return 'CloudCryptor'; }
 }

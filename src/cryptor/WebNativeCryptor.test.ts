@@ -1,6 +1,7 @@
 import { KeyEncryptionProvider } from './CryptorService';
 import { arrayBufferToHex, hexToBase64, hexToUtf8, sha256, utf8ToHex, WebNativeCryptor,
 } from './WebNativeCryptor';
+import {HexString} from "ferrum-plumbing";
 
 class DummyKeyProvider implements KeyEncryptionProvider {
   getKey(keyId?: string): string {
@@ -9,6 +10,10 @@ class DummyKeyProvider implements KeyEncryptionProvider {
 
   newKeyId(): string {
     return 'test_key_id';
+  }
+
+  async randomHex(keySize?: string): Promise<HexString> {
+    return '';
   }
 }
 

@@ -1,9 +1,10 @@
 "use strict";
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
         function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
         function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : new P(function (resolve) { resolve(result.value); }).then(fulfilled, rejected); }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
@@ -29,6 +30,26 @@ function arrayBufferToHex(ab) {
     return enc_hex_1.default.stringify(crypto_js_1.lib.WordArray.create(ab));
 }
 exports.arrayBufferToHex = arrayBufferToHex;
+function hexToArrayBuffer(hex) {
+    // @ts-ignore
+    hex = hex.toString(16);
+    hex = hex.replace(/^0x/i, '');
+    let bytes = [];
+    for (let c = 0; c < hex.length; c += 2)
+        bytes.push(parseInt(hex.substr(c, 2), 16));
+    // @ts-ignore
+    return new Uint8Array(bytes);
+}
+exports.hexToArrayBuffer = hexToArrayBuffer;
+/**
+ * Convert a hex string to a byte array
+ *
+ * Note: Implementation from crypto-js
+ *
+ * @method hexToBytes
+ * @param {string} hex
+ * @return {Array} the byte array
+ */
 function hexToBase64(hex) {
     return crypto_js_1.enc.Base64.stringify(enc_hex_1.default.parse(hex));
 }
@@ -103,6 +124,12 @@ class WebNativeCryptor {
             return sha256(hexData);
         });
     }
+    randomKey() {
+        return __awaiter(this, void 0, void 0, function* () {
+            return this.keyProvider.newKeyId();
+        });
+    }
+    __name__() { return 'WebNativeCryptor'; }
 }
 exports.WebNativeCryptor = WebNativeCryptor;
 //# sourceMappingURL=WebNativeCryptor.js.map

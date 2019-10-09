@@ -7,4 +7,5 @@ __export(require("./cryptor/CloudCryptor"));
 __export(require("./cryptor/CryptorService"));
 __export(require("./cryptor/WebNativeCryptor"));
 __export(require("./cryptor/clients/LambdaEncryptionService"));
+__export(require("./cryptor/TweetNaclCryptor"));
 //# sourceMappingURL=index.js.map
