@@ -11,14 +11,14 @@ export declare class Algo {
     };
 }
 export interface KeyEncryptionProvider {
-    randomHex(keySize?: string): Promise<HexString>;
+    randomHex(keySize?: number): Promise<HexString>;
     getKey(keyId?: string): HexString;
     newKeyId(): string;
 }
 export interface CryptorService {
     sha256(hexData: HexString): Promise<HexString>;
-    encryptHex(data: HexString): Promise<EncryptedData>;
-    decryptToHex(enc: EncryptedData): Promise<HexString>;
+    encryptHex(data: HexString, overrideKey?: HexString): Promise<EncryptedData>;
+    decryptToHex(enc: EncryptedData, overrideKey?: HexString): Promise<HexString>;
 }
 export interface AsymetricKeyPair {
     secretKey: HexString;

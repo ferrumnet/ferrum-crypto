@@ -54,6 +54,10 @@ function hexToBase64(hex) {
     return crypto_js_1.enc.Base64.stringify(enc_hex_1.default.parse(hex));
 }
 exports.hexToBase64 = hexToBase64;
+function base64ToHex(base64) {
+    return enc_hex_1.default.stringify(crypto_js_1.enc.Base64.parse(base64));
+}
+exports.base64ToHex = base64ToHex;
 function keyToHex(key) {
     const json = JSON.stringify(key);
     return enc_hex_1.default.stringify(enc_utf8_1.default.parse(json));
@@ -75,36 +79,40 @@ class WebNativeCryptor {
     constructor(keyProvider) {
         this.keyProvider = keyProvider;
     }
-    decryptKey(key) {
-        const kek = this.keyProvider.getKey(key.keyId);
-        const msg = enc_hex_1.default.parse(key.key);
-        const decKey = aes_1.default.decrypt(crypto_js_1.enc.Base64.stringify(msg), kek);
-        return decKey.toString();
+    decryptKey(key, overrideKey) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const kek = overrideKey || this.keyProvider.getKey(key.keyId);
+            const msg = enc_hex_1.default.parse(key.key);
+            const decKey = aes_1.default.decrypt(crypto_js_1.enc.Base64.stringify(msg), kek);
+            return decKey.toString();
+        });
     }
-    newKey() {
-        const keyId = this.keyProvider.newKeyId();
-        const kek = this.keyProvider.getKey(keyId);
-        const randomKeyWa = crypto_js_1.lib.WordArray.random(CryptorService_1.Algo.SIZES.KEY_SIZE);
-        const encKey = aes_1.default.encrypt(randomKeyWa, kek);
-        const encKeyB64 = encKey.toString();
-        const encKeyHex = crypto_js_1.enc.Hex.stringify(crypto_js_1.enc.Base64.parse(encKeyB64));
-        return { encryptedKey: encKeyHex, keyId, unEncrypedKey: enc_hex_1.default.stringify(randomKeyWa) };
+    newKey(overrideKey) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const keyId = this.keyProvider.newKeyId();
+            const kek = overrideKey || this.keyProvider.getKey(keyId);
+            const randomKeyWa = crypto_js_1.lib.WordArray.random(CryptorService_1.Algo.SIZES.KEY_SIZE);
+            const encKey = aes_1.default.encrypt(randomKeyWa, kek);
+            const encKeyB64 = encKey.toString();
+            const encKeyHex = crypto_js_1.enc.Hex.stringify(crypto_js_1.enc.Base64.parse(encKeyB64));
+            return { encryptedKey: encKeyHex, keyId, unEncrypedKey: enc_hex_1.default.stringify(randomKeyWa) };
+        });
     }
-    decryptToHex(encData) {
+    decryptToHex(encData, overrideKey) {
         return __awaiter(this, void 0, void 0, function* () {
             const key = keyHexToObject(encData.key);
             if (key.algo !== CryptorService_1.Algo.ENCRYPTION.AES) {
                 throw new CryptorService_1.CryptorError(`Key algorithm "${key.algo}" unsupported`);
             }
             const msg = enc_hex_1.default.parse(encData.data);
-            const unEnvelopedKey = this.decryptKey(key);
+            const unEnvelopedKey = yield this.decryptKey(key, overrideKey);
             const encRes = aes_1.default.decrypt(crypto_js_1.enc.Base64.stringify(msg), unEnvelopedKey);
             return encRes.toString(enc_hex_1.default);
         });
     }
-    encryptHex(data) {
+    encryptHex(data, overrideKey) {
         return __awaiter(this, void 0, void 0, function* () {
-            const newKey = this.newKey();
+            const newKey = yield this.newKey(overrideKey);
             const msg = enc_hex_1.default.parse(data);
             const res = aes_1.default.encrypt(msg, newKey.unEncrypedKey);
             const encMsgB64 = res.toString();
@@ -122,11 +130,6 @@ class WebNativeCryptor {
     sha256(hexData) {
         return __awaiter(this, void 0, void 0, function* () {
             return sha256(hexData);
-        });
-    }
-    randomKey() {
-        return __awaiter(this, void 0, void 0, function* () {
-            return this.keyProvider.newKeyId();
         });
     }
     __name__() { return 'WebNativeCryptor'; }

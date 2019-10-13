@@ -44,6 +44,10 @@ export function hexToBase64(hex: HexString): string {
   return enc.Base64.stringify(encHex.parse(hex));
 }
 
+export function base64ToHex(base64: string): HexString {
+  return encHex.stringify(enc.Base64.parse(base64));
+}
+
 function keyToHex(key: InternalReactNativeEncryptedKey): HexString {
   const json = JSON.stringify(key);
   return encHex.stringify(encUtf8.parse(json));
@@ -64,16 +68,17 @@ export async function sha256(hexData: string): Promise<HexString> {
 export class WebNativeCryptor implements CryptorService, Injectable {
   constructor(private keyProvider: KeyEncryptionProvider) { }
 
-  private decryptKey(key: InternalReactNativeEncryptedKey) {
-    const kek = this.keyProvider.getKey(key.keyId);
+  protected async decryptKey(key: InternalReactNativeEncryptedKey, overrideKey?: HexString) {
+    const kek = overrideKey || this.keyProvider.getKey(key.keyId);
     const msg = encHex.parse(key.key);
     const decKey = AES.decrypt(enc.Base64.stringify(msg), kek);
     return decKey.toString();
   }
 
-  private newKey(): { encryptedKey: HexString, keyId: string, unEncrypedKey: string } {
+  protected async newKey(overrideKey?: HexString):
+      Promise<{ encryptedKey: HexString, keyId: string, unEncrypedKey: string }> {
     const keyId = this.keyProvider.newKeyId();
-    const kek = this.keyProvider.getKey(keyId);
+    const kek = overrideKey || this.keyProvider.getKey(keyId);
     const randomKeyWa = lib.WordArray.random(Algo.SIZES.KEY_SIZE);
     const encKey = AES.encrypt(randomKeyWa, kek);
     const encKeyB64 = encKey.toString();
@@ -81,19 +86,19 @@ export class WebNativeCryptor implements CryptorService, Injectable {
     return { encryptedKey: encKeyHex, keyId, unEncrypedKey: encHex.stringify(randomKeyWa) };
   }
 
-  async decryptToHex(encData: EncryptedData): Promise<HexString> {
+  async decryptToHex(encData: EncryptedData, overrideKey?: string): Promise<HexString> {
     const key = keyHexToObject(encData.key);
     if (key.algo !== Algo.ENCRYPTION.AES) {
       throw new CryptorError(`Key algorithm "${key.algo}" unsupported`);
     }
     const msg = encHex.parse(encData.data);
-    const unEnvelopedKey = this.decryptKey(key);
+    const unEnvelopedKey = await this.decryptKey(key, overrideKey);
     const encRes = AES.decrypt(enc.Base64.stringify(msg), unEnvelopedKey);
     return encRes.toString(encHex);
   }
 
-  async encryptHex(data: HexString): Promise<EncryptedData> {
-    const newKey = this.newKey();
+  async encryptHex(data: HexString, overrideKey?: HexString): Promise<EncryptedData> {
+    const newKey = await this.newKey(overrideKey);
     const msg = encHex.parse(data);
     const res = AES.encrypt(msg, newKey.unEncrypedKey);
     const encMsgB64 = res.toString();
@@ -110,10 +115,6 @@ export class WebNativeCryptor implements CryptorService, Injectable {
 
   async sha256(hexData: string): Promise<HexString> {
     return sha256(hexData);
-  }
-
-  async randomKey(): Promise<HexString> {
-    return this.keyProvider.newKeyId();
   }
 
   __name__(): string { return 'WebNativeCryptor'; }

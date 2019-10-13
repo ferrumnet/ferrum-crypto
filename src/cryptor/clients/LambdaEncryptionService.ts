@@ -9,9 +9,6 @@ export class LambdaEncryptionService implements Injectable {
   private readonly endpoint: string;
   constructor(endpoint: string, lambdaSecret: string) {
     this.lambdaSecret = lambdaSecret;
-    // this.lambdaSecret = config.custom.lambdaSecret ||
-    //  config.secrets['ADDRESS_MANAGER_SECRET_KEY'];
-    // this.endpoint = config.custom.lambdaEncryptionEndpoint;
     this.endpoint = endpoint;
     if (!this.endpoint) {
       throw new Error('LambdaEncryptionService: Endpoint not initialized: ' +

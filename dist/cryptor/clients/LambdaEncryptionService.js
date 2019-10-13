@@ -23,9 +23,6 @@ const cross_fetch_1 = __importStar(require("cross-fetch"));
 class LambdaEncryptionService {
     constructor(endpoint, lambdaSecret) {
         this.lambdaSecret = lambdaSecret;
-        // this.lambdaSecret = config.custom.lambdaSecret ||
-        //  config.secrets['ADDRESS_MANAGER_SECRET_KEY'];
-        // this.endpoint = config.custom.lambdaEncryptionEndpoint;
         this.endpoint = endpoint;
         if (!this.endpoint) {
             throw new Error('LambdaEncryptionService: Endpoint not initialized: ' +

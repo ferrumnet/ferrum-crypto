@@ -12,7 +12,7 @@ class DummyKeyProvider implements KeyEncryptionProvider {
     return 'test_key_id';
   }
 
-  async randomHex(keySize?: string): Promise<HexString> {
+  async randomHex(keySize?: number): Promise<HexString> {
     return '';
   }
 }
