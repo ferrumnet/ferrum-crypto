@@ -17,7 +17,10 @@ const aes_1 = __importDefault(require("crypto-js/aes"));
 const enc_utf8_1 = __importDefault(require("crypto-js/enc-utf8"));
 const enc_hex_1 = __importDefault(require("crypto-js/enc-hex"));
 const sha256_1 = __importDefault(require("crypto-js/sha256"));
+const sha3_1 = __importDefault(require("crypto-js/sha3"));
 const crypto_js_1 = require("crypto-js");
+const ripemd160_1 = __importDefault(require("crypto-js/ripemd160"));
+const bs58_1 = __importDefault(require("bs58"));
 function utf8ToHex(hexStr) {
     return enc_hex_1.default.stringify(enc_utf8_1.default.parse(hexStr));
 }
@@ -30,6 +33,10 @@ function arrayBufferToHex(ab) {
     return enc_hex_1.default.stringify(crypto_js_1.lib.WordArray.create(ab));
 }
 exports.arrayBufferToHex = arrayBufferToHex;
+function ripemd160(hex) {
+    return ripemd160_1.default(enc_hex_1.default.parse(hex)).toString();
+}
+exports.ripemd160 = ripemd160;
 function hexToArrayBuffer(hex) {
     // @ts-ignore
     hex = hex.toString(16);
@@ -54,6 +61,10 @@ function hexToBase64(hex) {
     return crypto_js_1.enc.Base64.stringify(enc_hex_1.default.parse(hex));
 }
 exports.hexToBase64 = hexToBase64;
+function hexToBase58(hex) {
+    return bs58_1.default.encode(Buffer.from(hex, 'hex'));
+}
+exports.hexToBase58 = hexToBase58;
 function base64ToHex(base64) {
     return enc_hex_1.default.stringify(crypto_js_1.enc.Base64.parse(base64));
 }
@@ -69,12 +80,22 @@ function keyHexToObject(hex) {
 }
 function sha256(hexData) {
     return __awaiter(this, void 0, void 0, function* () {
-        const dataWa = enc_hex_1.default.parse(hexData);
-        const hash = sha256_1.default(dataWa);
-        return hash.toString(enc_hex_1.default);
+        return sha256sync(hexData);
     });
 }
 exports.sha256 = sha256;
+function sha256sync(hexData) {
+    const dataWa = enc_hex_1.default.parse(hexData);
+    const hash = sha256_1.default(dataWa);
+    return hash.toString(enc_hex_1.default);
+}
+exports.sha256sync = sha256sync;
+function sha3(hexData) {
+    const dataWa = enc_hex_1.default.parse(hexData);
+    const hash = sha3_1.default(dataWa, { outputLength: 256 });
+    return hash.toString(enc_hex_1.default);
+}
+exports.sha3 = sha3;
 class WebNativeCryptor {
     constructor(keyProvider) {
         this.keyProvider = keyProvider;
