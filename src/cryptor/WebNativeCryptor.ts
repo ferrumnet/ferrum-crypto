@@ -4,7 +4,10 @@ import AES from 'crypto-js/aes';
 import encUtf8 from 'crypto-js/enc-utf8';
 import encHex from 'crypto-js/enc-hex';
 import SHA256 from 'crypto-js/sha256';
+import SHA3 from 'crypto-js/sha3';
 import { WordArray, lib, enc } from 'crypto-js';
+import RIPEMD160 from "crypto-js/ripemd160"
+import bs58 from 'bs58';
 
 export function utf8ToHex(hexStr: HexString): HexString {
   return encHex.stringify(encUtf8.parse(hexStr));
@@ -16,6 +19,10 @@ export function hexToUtf8(hexStr: HexString): string {
 
 export function arrayBufferToHex(ab: Uint8Array): HexString {
   return encHex.stringify(lib.WordArray.create(ab));
+}
+
+export function ripemd160(hex: HexString): string {
+  return RIPEMD160(encHex.parse(hex)).toString();
 }
 
 export function hexToArrayBuffer(hex: HexString): Uint8Array {
@@ -44,6 +51,10 @@ export function hexToBase64(hex: HexString): string {
   return enc.Base64.stringify(encHex.parse(hex));
 }
 
+export function hexToBase58(hex: HexString): string {
+  return bs58.encode(Buffer.from(hex, 'hex'));
+}
+
 export function base64ToHex(base64: string): HexString {
   return encHex.stringify(enc.Base64.parse(base64));
 }
@@ -60,8 +71,19 @@ function keyHexToObject(hex: HexString) {
 }
 
 export async function sha256(hexData: string): Promise<HexString> {
+  return sha256sync(hexData);
+}
+
+export function sha256sync(hexData: string): HexString {
   const dataWa = encHex.parse(hexData);
   const hash: WordArray = SHA256(dataWa);
+  return hash.toString(encHex);
+}
+
+
+export function sha3(hexData: string): HexString {
+  const dataWa = encHex.parse(hexData);
+  const hash: WordArray = SHA3(dataWa, { outputLength: 256 });
   return hash.toString(encHex);
 }
 
