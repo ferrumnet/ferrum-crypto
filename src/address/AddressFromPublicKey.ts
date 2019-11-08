@@ -6,7 +6,7 @@ import {
     ripemd160,
     sha256sync,
     sha3,
-    utf8ToHex
+    utf8ToHex,
 } from '../cryptor/WebNativeCryptor';
 import bech32 from 'bech32';
 
