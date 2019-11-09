@@ -5,7 +5,7 @@ import encUtf8 from 'crypto-js/enc-utf8';
 import encHex from 'crypto-js/enc-hex';
 import SHA256 from 'crypto-js/sha256';
 import SHA3 from 'crypto-js/sha3';
-import { WordArray, lib, enc } from 'crypto-js';
+import CryptoJS, { WordArray, lib, enc } from 'crypto-js';
 import RIPEMD160 from "crypto-js/ripemd160"
 import bs58 from 'bs58';
 
@@ -23,6 +23,10 @@ export function arrayBufferToHex(ab: Uint8Array): HexString {
 
 export function ripemd160(hex: HexString): string {
   return RIPEMD160(encHex.parse(hex)).toString();
+}
+
+export function randomBytes(size: number): HexString {
+  return encHex.stringify(lib.WordArray.random(size));
 }
 
 export function hexToArrayBuffer(hex: HexString): Uint8Array {

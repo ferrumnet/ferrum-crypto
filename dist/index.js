@@ -8,5 +8,6 @@ __export(require("./cryptor/CryptorService"));
 __export(require("./cryptor/WebNativeCryptor"));
 __export(require("./cryptor/clients/LambdaEncryptionService"));
 __export(require("./cryptor/TweetNaclCryptor"));
+__export(require("./cryptor/CryptoJsKeyProvider"));
 __export(require("./address/AddressFromPublicKey"));
 //# sourceMappingURL=index.js.map

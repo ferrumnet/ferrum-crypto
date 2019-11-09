@@ -37,6 +37,10 @@ function ripemd160(hex) {
     return ripemd160_1.default(enc_hex_1.default.parse(hex)).toString();
 }
 exports.ripemd160 = ripemd160;
+function randomBytes(size) {
+    return enc_hex_1.default.stringify(crypto_js_1.lib.WordArray.random(size));
+}
+exports.randomBytes = randomBytes;
 function hexToArrayBuffer(hex) {
     // @ts-ignore
     hex = hex.toString(16);

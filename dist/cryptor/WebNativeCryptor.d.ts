@@ -4,6 +4,7 @@ export declare function utf8ToHex(hexStr: HexString): HexString;
 export declare function hexToUtf8(hexStr: HexString): string;
 export declare function arrayBufferToHex(ab: Uint8Array): HexString;
 export declare function ripemd160(hex: HexString): string;
+export declare function randomBytes(size: number): HexString;
 export declare function hexToArrayBuffer(hex: HexString): Uint8Array;
 /**
  * Convert a hex string to a byte array
