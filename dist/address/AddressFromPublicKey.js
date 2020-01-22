@@ -6,6 +6,12 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const ferrum_plumbing_1 = require("ferrum-plumbing");
 const WebNativeCryptor_1 = require("../cryptor/WebNativeCryptor");
 const bech32_1 = __importDefault(require("bech32"));
+function addressPair(address) {
+    return {
+        address,
+        addressWithChecksum: address,
+    };
+}
 class AddressFromPublicKey {
     constructor() { }
     __name__() { return 'AddressFromPublicKey'; }
@@ -14,13 +20,21 @@ class AddressFromPublicKey {
         ferrum_plumbing_1.ValidationUtils.isTrue(!!publicKeyCompressed && publicKeyCompressed.length === 66, '"publicKeyCompressed" must be provided and 66 bytes long');
         switch (network) {
             case 'BINANCE':
-                return exports.bnbGetAddressFromPublicKey(publicKeyCompressed, 'bnb');
+                return addressPair(exports.bnbGetAddressFromPublicKey(publicKeyCompressed, 'bnb'));
             case 'BITCOIN':
-                return bitcoinP2pkh(publicKeyUncompressed);
+                return addressPair(bitcoinP2pkh(publicKeyUncompressed));
             case 'ETHEREUM':
-                return ethAddressFromPublicKey(publicKeyUncompressed);
+                const ethAddr = ethAddressFromPublicKey(publicKeyUncompressed);
+                return {
+                    address: ethAddr.toLowerCase(),
+                    addressWithChecksum: ethAddr,
+                };
             case 'FERRUM':
-                return ethAddressFromPublicKey(publicKeyUncompressed).replace('0x', 'fx');
+                const frmAddr = ethAddressFromPublicKey(publicKeyUncompressed).replace('0x', 'fx');
+                return {
+                    address: frmAddr.toLowerCase(),
+                    addressWithChecksum: frmAddr,
+                };
             default:
                 throw new Error(`Network ${network} is not supported`);
         }

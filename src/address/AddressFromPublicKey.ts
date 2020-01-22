@@ -10,25 +10,45 @@ import {
 } from '../cryptor/WebNativeCryptor';
 import bech32 from 'bech32';
 
+export interface AddressChecksumPair {
+    address: string;
+    addressWithChecksum: string;
+}
+
+function addressPair(address: string) {
+    return {
+        address,
+        addressWithChecksum: address,
+    } as AddressChecksumPair;
+}
+
 export class AddressFromPublicKey implements Injectable {
     constructor() {}
 
     __name__(): string { return 'AddressFromPublicKey'; }
 
-    forNetwork(network: Network, publicKeyCompressed: HexString, publicKeyUncompressed: HexString): HexString {
+    forNetwork(network: Network, publicKeyCompressed: HexString, publicKeyUncompressed: HexString): AddressChecksumPair {
         ValidationUtils.isTrue(!!publicKeyUncompressed && publicKeyUncompressed.length === 130,
             '"publicKeyUncompressed" must be provided and 130 bytes long');
         ValidationUtils.isTrue(!!publicKeyCompressed && publicKeyCompressed.length === 66,
             '"publicKeyCompressed" must be provided and 66 bytes long');
         switch (network) {
             case 'BINANCE':
-                return bnbGetAddressFromPublicKey(publicKeyCompressed, 'bnb');
+                return addressPair(bnbGetAddressFromPublicKey(publicKeyCompressed, 'bnb'));
             case 'BITCOIN':
-                return bitcoinP2pkh(publicKeyUncompressed);
+                return addressPair(bitcoinP2pkh(publicKeyUncompressed));
             case 'ETHEREUM':
-                return ethAddressFromPublicKey(publicKeyUncompressed);
+                const ethAddr = ethAddressFromPublicKey(publicKeyUncompressed);
+                return {
+                    address: ethAddr.toLowerCase(),
+                    addressWithChecksum: ethAddr,
+                } as AddressChecksumPair;
             case 'FERRUM':
-                return ethAddressFromPublicKey(publicKeyUncompressed).replace('0x', 'fx');
+                const frmAddr = ethAddressFromPublicKey(publicKeyUncompressed).replace('0x', 'fx');
+                return {
+                    address: frmAddr.toLowerCase(),
+                    addressWithChecksum: frmAddr,
+                } as AddressChecksumPair;
             default:
                 throw new Error(`Network ${network} is not supported`);
         }
