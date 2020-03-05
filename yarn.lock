@@ -1884,7 +1884,7 @@ fb-watchman@^2.0.0:
 
 "ferrum-plumbing@git+https://github.com/ferrumnet/ferrum-plumbing.git":
   version "1.0.0"
-  resolved "git+https://github.com/ferrumnet/ferrum-plumbing.git#41db81c2cecbb8765b5f5745fb09bb4733e7461d"
+  resolved "git+https://github.com/ferrumnet/ferrum-plumbing.git#1929f606c18e13c73c370f7b9d97757152370076"
   dependencies:
     cross-fetch "^3.0.4"
 

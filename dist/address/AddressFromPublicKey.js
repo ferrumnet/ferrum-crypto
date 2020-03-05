@@ -23,6 +23,7 @@ class AddressFromPublicKey {
                 return addressPair(exports.bnbGetAddressFromPublicKey(publicKeyCompressed, 'bnb'));
             case 'BITCOIN':
                 return addressPair(bitcoinP2pkh(publicKeyUncompressed));
+            case 'RINKEBY':
             case 'ETHEREUM':
                 const ethAddr = ethAddressFromPublicKey(publicKeyUncompressed);
                 return {

@@ -37,6 +37,7 @@ export class AddressFromPublicKey implements Injectable {
                 return addressPair(bnbGetAddressFromPublicKey(publicKeyCompressed, 'bnb'));
             case 'BITCOIN':
                 return addressPair(bitcoinP2pkh(publicKeyUncompressed));
+            case 'RINKEBY':
             case 'ETHEREUM':
                 const ethAddr = ethAddressFromPublicKey(publicKeyUncompressed);
                 return {

@@ -5,7 +5,7 @@ import encUtf8 from 'crypto-js/enc-utf8';
 import encHex from 'crypto-js/enc-hex';
 import SHA256 from 'crypto-js/sha256';
 import SHA3 from 'crypto-js/sha3';
-import CryptoJS, { WordArray, lib, enc } from 'crypto-js';
+import { WordArray, lib, enc } from 'crypto-js';
 import RIPEMD160 from "crypto-js/ripemd160"
 import bs58 from 'bs58';
 
