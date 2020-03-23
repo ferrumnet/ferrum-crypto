@@ -48,7 +48,6 @@ function ethAddressFromPublicKey(publicKey) {
 }
 function toChecksum(address) {
     const addressHash = '0x' + WebNativeCryptor_1.sha3(WebNativeCryptor_1.utf8ToHex(address.slice(2)));
-    console.log('BUT OURS IS ', address, addressHash);
     let checksumAddress = "0x";
     for (let i = 0; i < 40; i++)
         checksumAddress += parseInt(addressHash[i + 2], 16) > 7

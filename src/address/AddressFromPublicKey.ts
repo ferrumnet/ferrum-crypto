@@ -63,7 +63,6 @@ function ethAddressFromPublicKey(publicKey: HexString): HexString {
 
 function toChecksum(address: HexString) {
     const addressHash = '0x' + sha3(utf8ToHex(address.slice(2)));
-    console.log('BUT OURS IS ', address, addressHash)
     let checksumAddress = "0x";
     for (let i = 0; i < 40; i++)
         checksumAddress += parseInt(addressHash[i + 2], 16) > 7
