@@ -24,4 +24,9 @@ test('BTC', () => {
     const actual = new AddressFromPublicKey_1.AddressFromPublicKey().forNetwork('BITCOIN', dummyPublicKeyCompressed, dummyPublicKey);
     expect(actual).toBe(expectedAddress);
 });
+test('BTC_TEST', () => {
+    const expectedAddress = 'mvXuCfczrC7saACBuMfht8wj7FAfRJzcrm';
+    const actual = new AddressFromPublicKey_1.AddressFromPublicKey().forNetwork('BITCOIN_TESTNET', dummyPublicKeyCompressed, dummyPublicKey);
+    expect(actual.addressWithChecksum).toBe(expectedAddress);
+});
 //# sourceMappingURL=AddressFromPublicKey.test.js.map

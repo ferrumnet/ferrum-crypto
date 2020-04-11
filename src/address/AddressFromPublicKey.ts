@@ -36,7 +36,9 @@ export class AddressFromPublicKey implements Injectable {
             case 'BINANCE':
                 return addressPair(bnbGetAddressFromPublicKey(publicKeyCompressed, 'bnb'));
             case 'BITCOIN':
-                return addressPair(bitcoinP2pkh(publicKeyUncompressed));
+                return addressPair(bitcoinP2pkh(publicKeyUncompressed, false));
+            case 'BITCOIN_TESTNET':
+                return addressPair(bitcoinP2pkh(publicKeyUncompressed, true));
             case 'RINKEBY':
             case 'ETHEREUM':
                 const ethAddr = ethAddressFromPublicKey(publicKeyUncompressed);
@@ -51,7 +53,7 @@ export class AddressFromPublicKey implements Injectable {
                     addressWithChecksum: frmAddr,
                 } as AddressChecksumPair;
             default:
-                throw new Error(`Network ${network} is not supported`);
+                throw new Error('Not supported');
         }
     }
 }
@@ -90,16 +92,16 @@ export const sha256ripemd160 = (hex: HexString) => {
 };
 
 // Based on http://procbits.com/2013/08/27/generating-a-bitcoin-address-with-javascript
-function bitcoinP2pkh(pubKey: HexString): string {
+function bitcoinP2pkh(pubKey: HexString, testnet: boolean): string {
     const hash160 = sha256ripemd160(pubKey);
 
-    const version = 0x00; //if using testnet, would use 0x6F or 111.
+    const version = testnet ? 0x6F : 0x00; //if using testnet, would use 0x6F or 111.
     const hashAndBytes = normalArray(hexToArrayBuffer(hash160));
     hashAndBytes.unshift(version);
     const hexed = arrayBufferToHex(toByteArray(hashAndBytes));
     const doubleSHA = sha256sync(sha256sync(hexed));
     const addressChecksum = doubleSHA.substr(0,8);
-    const unencodedAddress = "00" + hash160 + addressChecksum;
+    const unencodedAddress = (testnet ? '6f' : "00") + hash160 + addressChecksum;
     return hexToBase58(unencodedAddress);
 }
 

@@ -22,7 +22,9 @@ class AddressFromPublicKey {
             case 'BINANCE':
                 return addressPair(exports.bnbGetAddressFromPublicKey(publicKeyCompressed, 'bnb'));
             case 'BITCOIN':
-                return addressPair(bitcoinP2pkh(publicKeyUncompressed));
+                return addressPair(bitcoinP2pkh(publicKeyUncompressed, false));
+            case 'BITCOIN_TESTNET':
+                return addressPair(bitcoinP2pkh(publicKeyUncompressed, true));
             case 'RINKEBY':
             case 'ETHEREUM':
                 const ethAddr = ethAddressFromPublicKey(publicKeyUncompressed);
@@ -37,7 +39,7 @@ class AddressFromPublicKey {
                     addressWithChecksum: frmAddr,
                 };
             default:
-                throw new Error(`Network ${network} is not supported`);
+                throw new Error('Not supported');
         }
     }
 }
@@ -72,15 +74,15 @@ exports.sha256ripemd160 = (hex) => {
     return WebNativeCryptor_1.ripemd160(ProgramSha256);
 };
 // Based on http://procbits.com/2013/08/27/generating-a-bitcoin-address-with-javascript
-function bitcoinP2pkh(pubKey) {
+function bitcoinP2pkh(pubKey, testnet) {
     const hash160 = exports.sha256ripemd160(pubKey);
-    const version = 0x00; //if using testnet, would use 0x6F or 111.
+    const version = testnet ? 0x6F : 0x00; //if using testnet, would use 0x6F or 111.
     const hashAndBytes = normalArray(WebNativeCryptor_1.hexToArrayBuffer(hash160));
     hashAndBytes.unshift(version);
     const hexed = WebNativeCryptor_1.arrayBufferToHex(toByteArray(hashAndBytes));
     const doubleSHA = WebNativeCryptor_1.sha256sync(WebNativeCryptor_1.sha256sync(hexed));
     const addressChecksum = doubleSHA.substr(0, 8);
-    const unencodedAddress = "00" + hash160 + addressChecksum;
+    const unencodedAddress = (testnet ? '6f' : "00") + hash160 + addressChecksum;
     return WebNativeCryptor_1.hexToBase58(unencodedAddress);
 }
 function normalArray(buffer) {
