@@ -20,12 +20,12 @@ test('BNB', () => {
     expect(actual).toBe(expectedAddress);
 });
 test('BTC', () => {
-    const expectedAddress = '1G1wucY23Agco3iaBnhL4DjQFFZxVbcAYy';
+    const expectedAddress = '18rKNb7Pj1EcxhMYaDdEHE5b6QzoDNiVmJ';
     const actual = new AddressFromPublicKey_1.AddressFromPublicKey().forNetwork('BITCOIN', dummyPublicKeyCompressed, dummyPublicKey);
-    expect(actual).toBe(expectedAddress);
+    expect(actual.addressWithChecksum).toBe(expectedAddress);
 });
 test('BTC_TEST', () => {
-    const expectedAddress = 'mvXuCfczrC7saACBuMfht8wj7FAfRJzcrm';
+    const expectedAddress = 'moNGfeCNY2fsjoqAHnbc79HuxQbWCMro5f';
     const actual = new AddressFromPublicKey_1.AddressFromPublicKey().forNetwork('BITCOIN_TESTNET', dummyPublicKeyCompressed, dummyPublicKey);
     expect(actual.addressWithChecksum).toBe(expectedAddress);
 });
