@@ -4,5 +4,6 @@ export * from './cryptor/WebNativeCryptor';
 export * from './cryptor/clients/LambdaEncryptionService';
 export * from './cryptor/TweetNaclCryptor';
 export * from './cryptor/CryptoJsKeyProvider';
+export * from './cryptor/SignatureUtils';
 export * from './address/AddressFromPublicKey';
 //# sourceMappingURL=index.d.ts.map
