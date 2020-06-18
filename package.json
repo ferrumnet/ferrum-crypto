@@ -38,6 +38,7 @@
     "crypto-js": "^3.1.9-1",
     "elliptic": "https://github.com/ferrumnet/elliptic.git",
     "ferrum-plumbing": "git+https://github.com/ferrumnet/ferrum-plumbing.git",
+    "rlp": "^2.2.5",
     "tweetnacl": "git+https://github.com/ferrumnet/tweetnacl-js.git"
   }
 }
