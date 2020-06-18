@@ -4,6 +4,9 @@ import * as rlp from 'rlp';
 export declare class EthereumTransactionSerializer implements TransactionSerializer {
     private chainId;
     constructor(chainId: number);
+    createTransactionParams(to: string, valueBigInt: string, gasPriceBigInt: string, gasLimit: string, nonce: string, data: string): {
+        [field: string]: string;
+    };
     verifySend(tx: any, from: string, to: string, currency: string, amountBigInt: string): boolean;
     verifyData(tx: any, from: string, to: string, data: string, amountBigInt: string): boolean;
     serialize(tx: any): TransactionSerializerResult;

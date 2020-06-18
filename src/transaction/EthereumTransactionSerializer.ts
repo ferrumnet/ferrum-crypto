@@ -6,6 +6,25 @@ import BN from 'bn.js';
 
 export class EthereumTransactionSerializer implements TransactionSerializer {
     constructor( private chainId: number, ) { }
+
+    createTransactionParams(
+      to: string,
+      valueBigInt: string,
+      gasPriceBigInt: string,
+      gasLimit: string,
+      nonce: string,
+      data: string,
+      ): {[field: string]: string} {
+        return {
+          nonce: '0x' + new BN(nonce).toString('hex'),
+          to: to.toLowerCase(),
+          gasPrice: '0x' + new BN(gasPriceBigInt).toString('hex'),
+          gasLimit: '0x' + new BN(gasLimit).toString('hex'),
+          value: !!valueBigInt ? '0x' + new BN(valueBigInt).toString('hex') : '0x',
+          data: '0x' + data,
+        }
+    }
+
     verifySend(tx: any, from: string, to: string, currency: string, amountBigInt: string) {
         // For eth.
         ValidationUtils.isTrue(!!currency && currency.indexOf(':')>0, '"currency" is requried');

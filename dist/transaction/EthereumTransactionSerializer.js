@@ -18,6 +18,16 @@ class EthereumTransactionSerializer {
     constructor(chainId) {
         this.chainId = chainId;
     }
+    createTransactionParams(to, valueBigInt, gasPriceBigInt, gasLimit, nonce, data) {
+        return {
+            nonce: '0x' + new bn_js_1.default(nonce).toString('hex'),
+            to: to.toLowerCase(),
+            gasPrice: '0x' + new bn_js_1.default(gasPriceBigInt).toString('hex'),
+            gasLimit: '0x' + new bn_js_1.default(gasLimit).toString('hex'),
+            value: !!valueBigInt ? '0x' + new bn_js_1.default(valueBigInt).toString('hex') : '0x',
+            data: '0x' + data,
+        };
+    }
     verifySend(tx, from, to, currency, amountBigInt) {
         // For eth.
         ferrum_plumbing_1.ValidationUtils.isTrue(!!currency && currency.indexOf(':') > 0, '"currency" is requried');
