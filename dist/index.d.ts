@@ -6,4 +6,5 @@ export * from './cryptor/TweetNaclCryptor';
 export * from './cryptor/CryptoJsKeyProvider';
 export * from './cryptor/SignatureUtils';
 export * from './address/AddressFromPublicKey';
+export * from './transaction/TransactionSerializer';
 //# sourceMappingURL=index.d.ts.map

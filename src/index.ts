@@ -8,3 +8,4 @@ export * from './cryptor/CryptoJsKeyProvider';
 export * from './cryptor/SignatureUtils';
 
 export * from './address/AddressFromPublicKey';
+export * from './transaction/TransactionSerializer';

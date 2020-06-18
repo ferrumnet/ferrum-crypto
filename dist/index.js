@@ -11,4 +11,5 @@ __export(require("./cryptor/TweetNaclCryptor"));
 __export(require("./cryptor/CryptoJsKeyProvider"));
 __export(require("./cryptor/SignatureUtils"));
 __export(require("./address/AddressFromPublicKey"));
+__export(require("./transaction/TransactionSerializer"));
 //# sourceMappingURL=index.js.map
