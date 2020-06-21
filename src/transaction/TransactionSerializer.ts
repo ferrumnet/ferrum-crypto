@@ -7,6 +7,7 @@ export interface TransactionSerializerResult {
 }
 
 export interface TransactionSerializer {
+    createTransactionParams(...params:any[]): {[field: string]: string};
     serialize(tx: any): TransactionSerializerResult;
     verifySend(tx: any, from: string, to: string, currency: string, amountBigInt: string): boolean;
     verifyData(tx: any, from: string, to: string, data: string, amountBigInt: string): boolean;
