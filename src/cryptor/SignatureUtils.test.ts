@@ -26,3 +26,9 @@ test('Sign then verify', () => {
     expect(ver2).toBe(true);
     expect(nver2).toBe(false);
 });
+
+test('pubk from sk', () => {
+    const sk = '0000000000000000000000000000000000000000000000000000000000000000';
+    const pubk = Eddsa.publicKey(sk);
+    console.log(pubk)
+});

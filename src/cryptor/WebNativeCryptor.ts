@@ -4,6 +4,7 @@ import AES from 'crypto-js/aes';
 import encUtf8 from 'crypto-js/enc-utf8';
 import encHex from 'crypto-js/enc-hex';
 import SHA256 from 'crypto-js/sha256';
+import SHA1 from 'crypto-js/sha1';
 import SHA3 from 'crypto-js/sha3';
 import { WordArray, lib, enc } from 'crypto-js';
 import RIPEMD160 from "crypto-js/ripemd160"
@@ -84,6 +85,11 @@ export function sha256sync(hexData: string): HexString {
   return hash.toString(encHex);
 }
 
+export function sha1(hexData: HexString): HexString {
+  const dataWa = encHex.parse(hexData);
+  const hash: WordArray = SHA1(dataWa);
+  return hash.toString(encHex);
+}
 
 export function sha3(hexData: string): HexString {
   const dataWa = encHex.parse(hexData);

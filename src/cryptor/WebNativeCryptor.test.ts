@@ -1,5 +1,5 @@
 import { KeyEncryptionProvider } from './CryptorService';
-import { arrayBufferToHex, hexToBase64, hexToUtf8, sha256, utf8ToHex, WebNativeCryptor,
+import { arrayBufferToHex, hexToBase64, hexToUtf8, sha1, sha256, utf8ToHex, WebNativeCryptor,
 } from './WebNativeCryptor';
 import {HexString} from "ferrum-plumbing";
 
@@ -42,8 +42,17 @@ test('array buffer to hex', () => {
 });
 
 test('hex to b64', () => {
-  const msg = 'HI!';
+  const msg = 'testing the sha1';
   const msgHex = utf8ToHex(msg);
-  const b64 = hexToBase64(msgHex);
-  expect(b64).toBe('SEkh');
+  const sha1ed = sha1(msgHex);
+  console.log('AHSAS', sha1ed);
+  expect(msgHex).toBe('27b3899354c310000d7cd77a4530649890116b2d');
+});
+
+test('sha1 ', () => {
+  const msg = 'testing the sha1';
+  const msgHex = utf8ToHex(msg);
+  const hex = sha1(msgHex);
+  console.log('sha1', hex)
+  expect(hex).toBe('27b3899354c310000d7cd77a4530649890116b2d');
 });
