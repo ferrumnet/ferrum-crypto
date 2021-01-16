@@ -45,9 +45,17 @@ test('array buffer to hex', () => {
     expect(text).toBe('HELLO!');
 });
 test('hex to b64', () => {
-    const msg = 'HI!';
+    const msg = 'testing the sha1';
     const msgHex = WebNativeCryptor_1.utf8ToHex(msg);
-    const b64 = WebNativeCryptor_1.hexToBase64(msgHex);
-    expect(b64).toBe('SEkh');
+    const sha1ed = WebNativeCryptor_1.sha1(msgHex);
+    console.log('AHSAS', sha1ed);
+    expect(msgHex).toBe('27b3899354c310000d7cd77a4530649890116b2d');
+});
+test('sha1 ', () => {
+    const msg = 'testing the sha1';
+    const msgHex = WebNativeCryptor_1.utf8ToHex(msg);
+    const hex = WebNativeCryptor_1.sha1(msgHex);
+    console.log('sha1', hex);
+    expect(hex).toBe('27b3899354c310000d7cd77a4530649890116b2d');
 });
 //# sourceMappingURL=WebNativeCryptor.test.js.map

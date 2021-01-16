@@ -17,6 +17,7 @@ const aes_1 = __importDefault(require("crypto-js/aes"));
 const enc_utf8_1 = __importDefault(require("crypto-js/enc-utf8"));
 const enc_hex_1 = __importDefault(require("crypto-js/enc-hex"));
 const sha256_1 = __importDefault(require("crypto-js/sha256"));
+const sha1_1 = __importDefault(require("crypto-js/sha1"));
 const sha3_1 = __importDefault(require("crypto-js/sha3"));
 const crypto_js_1 = require("crypto-js");
 const ripemd160_1 = __importDefault(require("crypto-js/ripemd160"));
@@ -94,6 +95,12 @@ function sha256sync(hexData) {
     return hash.toString(enc_hex_1.default);
 }
 exports.sha256sync = sha256sync;
+function sha1(hexData) {
+    const dataWa = enc_hex_1.default.parse(hexData);
+    const hash = sha1_1.default(dataWa);
+    return hash.toString(enc_hex_1.default);
+}
+exports.sha1 = sha1;
 function sha3(hexData) {
     const dataWa = enc_hex_1.default.parse(hexData);
     const hash = sha3_1.default(dataWa, { outputLength: 256 });

@@ -20,6 +20,7 @@ export declare function hexToBase58(hex: HexString): string;
 export declare function base64ToHex(base64: string): HexString;
 export declare function sha256(hexData: string): Promise<HexString>;
 export declare function sha256sync(hexData: string): HexString;
+export declare function sha1(hexData: HexString): HexString;
 export declare function sha3(hexData: string): HexString;
 export declare class WebNativeCryptor implements CryptorService, Injectable {
     private keyProvider;
