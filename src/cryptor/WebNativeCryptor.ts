@@ -6,6 +6,7 @@ import encHex from 'crypto-js/enc-hex';
 import SHA256 from 'crypto-js/sha256';
 import SHA1 from 'crypto-js/sha1';
 import SHA3 from 'crypto-js/sha3';
+import HmacSHA256 from 'crypto-js/hmac-sha256';
 import { WordArray, lib, enc } from 'crypto-js';
 import RIPEMD160 from "crypto-js/ripemd160"
 import bs58 from 'bs58';
@@ -83,6 +84,13 @@ export function sha256sync(hexData: string): HexString {
   const dataWa = encHex.parse(hexData);
   const hash: WordArray = SHA256(dataWa);
   return hash.toString(encHex);
+}
+
+export function hmac(secret: HexString, dataUtf8: string) {
+	const secretWa = encHex.parse(secret);
+	const dataWa = encUtf8.parse(dataUtf8);
+	const res = HmacSHA256(dataWa, secretWa);
+	return res.toString(encHex);
 }
 
 export function sha1(hexData: HexString): HexString {

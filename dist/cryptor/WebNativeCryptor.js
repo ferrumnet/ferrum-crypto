@@ -19,6 +19,7 @@ const enc_hex_1 = __importDefault(require("crypto-js/enc-hex"));
 const sha256_1 = __importDefault(require("crypto-js/sha256"));
 const sha1_1 = __importDefault(require("crypto-js/sha1"));
 const sha3_1 = __importDefault(require("crypto-js/sha3"));
+const hmac_sha256_1 = __importDefault(require("crypto-js/hmac-sha256"));
 const crypto_js_1 = require("crypto-js");
 const ripemd160_1 = __importDefault(require("crypto-js/ripemd160"));
 const bs58_1 = __importDefault(require("bs58"));
@@ -95,6 +96,13 @@ function sha256sync(hexData) {
     return hash.toString(enc_hex_1.default);
 }
 exports.sha256sync = sha256sync;
+function hmac(secret, dataUtf8) {
+    const secretWa = enc_hex_1.default.parse(secret);
+    const dataWa = enc_utf8_1.default.parse(dataUtf8);
+    const res = hmac_sha256_1.default(dataWa, secretWa);
+    return res.toString(enc_hex_1.default);
+}
+exports.hmac = hmac;
 function sha1(hexData) {
     const dataWa = enc_hex_1.default.parse(hexData);
     const hash = sha1_1.default(dataWa);

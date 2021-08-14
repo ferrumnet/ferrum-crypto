@@ -1,5 +1,5 @@
 import { KeyEncryptionProvider } from './CryptorService';
-import { arrayBufferToHex, hexToBase64, hexToUtf8, sha1, sha256, utf8ToHex, WebNativeCryptor,
+import { arrayBufferToHex, hexToBase64, hexToUtf8, hmac, sha1, sha256, utf8ToHex, WebNativeCryptor,
 } from './WebNativeCryptor';
 import {HexString} from "ferrum-plumbing";
 
@@ -56,3 +56,11 @@ test('sha1 ', () => {
   console.log('sha1', hex)
   expect(hex).toBe('27b3899354c310000d7cd77a4530649890116b2d');
 });
+
+test('hmac', () => {
+	const secret = '39fc4d7daea55e95999e5a5e517710f6477917c6997ef552afd76a7b520c5209';
+	const data = 'Some data {"here"}';
+	const res = hmac(secret, data);
+	console.log('HMAC', res);
+	expect(res).toBe('dbd6eeda2ac65f22f179add01cc2a692fc98ee5c3f5c6cc639362a965f7ad8fc');
+})

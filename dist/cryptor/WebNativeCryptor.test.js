@@ -58,4 +58,11 @@ test('sha1 ', () => {
     console.log('sha1', hex);
     expect(hex).toBe('27b3899354c310000d7cd77a4530649890116b2d');
 });
+test('hmac', () => {
+    const secret = '39fc4d7daea55e95999e5a5e517710f6477917c6997ef552afd76a7b520c5209';
+    const data = 'Some data {"here"}';
+    const res = WebNativeCryptor_1.hmac(secret, data);
+    console.log('HMAC', res);
+    expect(res).toBe('dbd6eeda2ac65f22f179add01cc2a692fc98ee5c3f5c6cc639362a965f7ad8fc');
+});
 //# sourceMappingURL=WebNativeCryptor.test.js.map
