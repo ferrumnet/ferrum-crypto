@@ -63,7 +63,7 @@ class Ecdsa {
         ferrum_plumbing_1.ValidationUtils.isTrue(s.length === 64, 's len is not 64');
         let h = v.toString(16);
         ferrum_plumbing_1.ValidationUtils.isTrue(h.length <= 2, 'v too large');
-        if (h.length === 0) {
+        if (h.length === 1) {
             h = '0' + h;
         }
         return r + s + h;
