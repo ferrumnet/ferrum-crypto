@@ -79,7 +79,7 @@ export class Ecdsa {
     }
 
     static decode(sig: HexString): [string, string, number] {
-        ValidationUtils.isTrue(sig.length === 64 * 2 + 1, 'sig len is not 65');
+        ValidationUtils.isTrue(sig.length === 64 * 2 + 2, 'sig len rs not 66');
         return [sig.substring(0, 64), sig.substring(64, 64 * 2), Number('0x' + sig.substring(64 * 2))];
     }
 }
