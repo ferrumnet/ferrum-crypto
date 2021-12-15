@@ -1,5 +1,5 @@
 import { Algo, CryptorError, CryptorService, KeyEncryptionProvider } from './CryptorService';
-import {EncryptedData, HexString, Injectable, InternalReactNativeEncryptedKey} from 'ferrum-plumbing';
+import {EncryptedData, HexString, Injectable, InternalReactNativeEncryptedKey, ValidationUtils} from 'ferrum-plumbing';
 import AES from 'crypto-js/aes';
 import encUtf8 from 'crypto-js/enc-utf8';
 import encHex from 'crypto-js/enc-hex';
@@ -109,6 +109,9 @@ export class WebNativeCryptor implements CryptorService, Injectable {
   constructor(private keyProvider: KeyEncryptionProvider) { }
 
   protected async decryptKey(key: InternalReactNativeEncryptedKey, overrideKey?: HexString) {
+    if (key.keyId === 'PROVIDED') {
+      ValidationUtils.isTrue(!!overrideKey, 'You must provide the key to decrypt');
+    }
     const kek = overrideKey || this.keyProvider.getKey(key.keyId);
     const msg = encHex.parse(key.key);
     const decKey = AES.decrypt(enc.Base64.stringify(msg), kek);
@@ -117,7 +120,7 @@ export class WebNativeCryptor implements CryptorService, Injectable {
 
   protected async newKey(overrideKey?: HexString):
       Promise<{ encryptedKey: HexString, keyId: string, unEncrypedKey: string }> {
-    const keyId = this.keyProvider.newKeyId();
+    const keyId = !!overrideKey ? 'PROVIDED' : this.keyProvider.newKeyId();
     const kek = overrideKey || this.keyProvider.getKey(keyId);
     const randomKeyWa = lib.WordArray.random(Algo.SIZES.KEY_SIZE);
     const encKey = AES.encrypt(randomKeyWa, kek);

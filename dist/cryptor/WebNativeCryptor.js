@@ -13,6 +13,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const CryptorService_1 = require("./CryptorService");
+const ferrum_plumbing_1 = require("ferrum-plumbing");
 const aes_1 = __importDefault(require("crypto-js/aes"));
 const enc_utf8_1 = __importDefault(require("crypto-js/enc-utf8"));
 const enc_hex_1 = __importDefault(require("crypto-js/enc-hex"));
@@ -121,6 +122,9 @@ class WebNativeCryptor {
     }
     decryptKey(key, overrideKey) {
         return __awaiter(this, void 0, void 0, function* () {
+            if (key.keyId === 'PROVIDED') {
+                ferrum_plumbing_1.ValidationUtils.isTrue(!!overrideKey, 'You must provide the key to decrypt');
+            }
             const kek = overrideKey || this.keyProvider.getKey(key.keyId);
             const msg = enc_hex_1.default.parse(key.key);
             const decKey = aes_1.default.decrypt(crypto_js_1.enc.Base64.stringify(msg), kek);
@@ -129,7 +133,7 @@ class WebNativeCryptor {
     }
     newKey(overrideKey) {
         return __awaiter(this, void 0, void 0, function* () {
-            const keyId = this.keyProvider.newKeyId();
+            const keyId = !!overrideKey ? 'PROVIDED' : this.keyProvider.newKeyId();
             const kek = overrideKey || this.keyProvider.getKey(keyId);
             const randomKeyWa = crypto_js_1.lib.WordArray.random(CryptorService_1.Algo.SIZES.KEY_SIZE);
             const encKey = aes_1.default.encrypt(randomKeyWa, kek);
