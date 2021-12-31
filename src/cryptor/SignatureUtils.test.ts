@@ -68,6 +68,8 @@ test('Sign verif a gizzilion times', () => {
         const sig = Ecdsa.sign(sk, msgHash);
         const ver = Ecdsa.recoverAddress(sig, msgHash);
         expect(ver).toBe(addr);
-        process.stdout.write('.');
+        if (i % 1000 === 0) {
+            console.log('.... ', i);
+        }
     }
 });

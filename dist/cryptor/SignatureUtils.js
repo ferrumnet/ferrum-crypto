@@ -42,7 +42,7 @@ class Ecdsa {
         const key = Ecdsa.curve().keyFromPrivate(WebNativeCryptor_1.hexToArrayBuffer(sk));
         const sig = key.sign(msg);
         ferrum_plumbing_1.ValidationUtils.isTrue(key.verify(msgHash, sig), 'Could not verify signature just created! This should not happen');
-        return Ecdsa.encode(WebNativeCryptor_1.arrayBufferToHex(sig.r.toBuffer()), WebNativeCryptor_1.arrayBufferToHex(sig.s.toBuffer()), sig.recoveryParam || 0);
+        return Ecdsa.encode(WebNativeCryptor_1.arrayBufferToHex(sig.r.toBuffer('be', 32)), WebNativeCryptor_1.arrayBufferToHex(sig.s.toBuffer('be', 32)), sig.recoveryParam || 0);
     }
     static publicKey(secret) {
         const key = Ecdsa.curve().keyFromPrivate(WebNativeCryptor_1.hexToArrayBuffer(secret));

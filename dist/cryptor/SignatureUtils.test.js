@@ -50,4 +50,17 @@ test('ECDSA sg and back', () => {
     const recovered = SignatureUtils_1.Ecdsa.recoverAddress(sig1, msgHash1);
     expect(ourAddr.address).toBe(recovered);
 });
+test('Sign verif a gizzilion times', () => {
+    for (let i = 0; i < 100000; i++) {
+        const msgHash = WebNativeCryptor_1.randomBytes(32);
+        const sk = WebNativeCryptor_1.randomBytes(32);
+        const pubHex = SignatureUtils_1.Ecdsa.publicKey(sk);
+        const addr = new AddressFromPublicKey_1.AddressFromPublicKey().forNetwork('ETHEREUM', pubHex.substring(0, 66), // Dummy compressed pubkey. Not needed for ETH network
+        pubHex).address;
+        const sig = SignatureUtils_1.Ecdsa.sign(sk, msgHash);
+        const ver = SignatureUtils_1.Ecdsa.recoverAddress(sig, msgHash);
+        expect(ver).toBe(addr);
+        process.stdout.write('.');
+    }
+});
 //# sourceMappingURL=SignatureUtils.test.js.map
