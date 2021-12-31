@@ -1,4 +1,4 @@
-import { utf8ToHex, sha256, sha256sync } from "./WebNativeCryptor";
+import { utf8ToHex, sha256, sha256sync, randomBytes } from "./WebNativeCryptor";
 import { Ecdsa, Eddsa } from "./SignatureUtils";
 import { AddressFromPublicKey } from "../address/AddressFromPublicKey";
 
@@ -54,4 +54,20 @@ test('ECDSA sg and back', () => {
     const ourAddr = new AddressFromPublicKey().forNetwork('ETHEREUM', pubK.substring(0, 66), pubK); /* dummy compressed */
     const recovered = Ecdsa.recoverAddress(sig1, msgHash1);
     expect(ourAddr.address).toBe(recovered);
+});
+
+test('Sign verif a gizzilion times', () => {
+    for(let i=0; i<100000; i++) {
+        const msgHash = randomBytes(32);
+        const sk = randomBytes(32);
+        const pubHex = Ecdsa.publicKey(sk);
+        const addr = new AddressFromPublicKey().forNetwork(
+            'ETHEREUM', 
+            pubHex.substring(0, 66), // Dummy compressed pubkey. Not needed for ETH network
+            pubHex).address;
+        const sig = Ecdsa.sign(sk, msgHash);
+        const ver = Ecdsa.recoverAddress(sig, msgHash);
+        expect(ver).toBe(addr);
+        process.stdout.write('.');
+    }
 });

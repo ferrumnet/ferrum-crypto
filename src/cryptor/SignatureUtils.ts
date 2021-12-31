@@ -48,7 +48,7 @@ export class Ecdsa {
         const key = Ecdsa.curve().keyFromPrivate(hexToArrayBuffer(sk) as any);
         const sig = key.sign(msg);
         ValidationUtils.isTrue(key.verify(msgHash, sig), 'Could not verify signature just created! This should not happen');
-        return  Ecdsa.encode(arrayBufferToHex(sig.r.toBuffer()), arrayBufferToHex(sig.s.toBuffer()), sig.recoveryParam || 0);
+        return  Ecdsa.encode(arrayBufferToHex(sig.r.toBuffer('be', 32)), arrayBufferToHex(sig.s.toBuffer('be', 32)), sig.recoveryParam || 0);
     }
 
     static publicKey(secret: HexString): HexString {
